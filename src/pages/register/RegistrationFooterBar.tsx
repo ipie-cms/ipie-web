@@ -43,9 +43,11 @@ export function RegistrationFooterBar({
   const identityProofTypeLabel = identityProofTypes.find(
     (option) => option.id === wizard.fields.identityProofTypeId,
   )?.label
-  const professionalRoleLabel = professionalRoles.find(
-    (option) => option.id === wizard.fields.professionalRoleId,
-  )?.label
+  // Every role selected, not the first: the preview should show what the person is about to submit.
+  const professionalRoleLabel = (wizard.fields.professionalRoles ?? [])
+    .map((entry) => professionalRoles.find((option) => option.id === entry.roleId)?.label)
+    .filter(Boolean)
+    .join(', ')
 
   return (
     <div className="flex items-center justify-between">
@@ -77,7 +79,7 @@ export function RegistrationFooterBar({
               <PreviewRow label="PIN" value={wizard.fields.pin} />
               <PreviewRow label="Identity proof type" value={identityProofTypeLabel} />
               <PreviewRow label="Identity proof number" value={wizard.fields.identityProofNumber} />
-              <PreviewRow label="Professional role" value={professionalRoleLabel} />
+              <PreviewRow label="Professional roles" value={professionalRoleLabel} />
               <PreviewRow
                 label="Entity"
                 value={wizard.selectedOrganisationName ?? wizard.fields.entity?.name}
