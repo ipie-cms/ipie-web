@@ -10,6 +10,7 @@ import { RegisterPage } from '@/pages/RegisterPage'
 import { SetPasswordPage } from '@/pages/SetPasswordPage'
 import { DashboardPage } from '@/pages/DashboardPage'
 import { UsersPage } from '@/pages/UsersPage'
+import { PermissionsPage } from '@/pages/PermissionsPage'
 import { RolesPage } from '@/pages/RolesPage'
 import { SsoCallbackPage } from '@/pages/SsoCallbackPage'
 import { LinkedAccountsPage } from '@/pages/LinkedAccountsPage'
@@ -34,6 +35,7 @@ function App() {
           <Route element={<AppLayout />}>
             <Route path="/dashboard" element={<DashboardPage />} />
             <Route path="/users" element={<UsersPage />} />
+            <Route path="/permissions" element={<PermissionsPage />} />
             <Route path="/roles" element={<RolesPage />} />
             <Route path="/linked-accounts" element={<LinkedAccountsPage />} />
             <Route path="/notifications" element={<NotificationsPage />} />
