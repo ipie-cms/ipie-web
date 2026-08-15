@@ -2,6 +2,7 @@ import { createApi } from '@reduxjs/toolkit/query/react'
 
 import { axiosBaseQuery } from '@/lib/axiosBaseQuery'
 import { keycloakClient } from '@/lib/axios'
+import { getRuntimeConfig } from '@/lib/runtimeConfig'
 
 export interface LoginRequest {
   username: string
@@ -14,7 +15,8 @@ export interface ExchangeCodeRequest {
   redirectUri: string
 }
 
-const ssoClientId = import.meta.env.VITE_KEYCLOAK_SSO_CLIENT_ID
+const { keycloakSsoClientId: ssoClientId, keycloakRealm: realm,
+        keycloakClientId: clientId, keycloakClientSecret: clientSecret } = getRuntimeConfig()
 
 export interface TokenResponse {
   access_token: string
@@ -23,9 +25,6 @@ export interface TokenResponse {
   token_type: string
 }
 
-const realm = import.meta.env.VITE_KEYCLOAK_REALM
-const clientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID
-const clientSecret = import.meta.env.VITE_KEYCLOAK_CLIENT_SECRET
 
 export const keycloakApi = createApi({
   reducerPath: 'keycloakApi',
