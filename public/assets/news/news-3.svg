@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 180" role="img" aria-label="News thumbnail placeholder">
+  <rect width="320" height="180" fill="#111827"/>
+  <rect x="40" y="120" width="20" height="30" fill="#374151"/>
+  <rect x="70" y="100" width="20" height="50" fill="#4b5563"/>
+  <rect x="100" y="80" width="20" height="70" fill="#374151"/>
+  <rect x="130" y="110" width="20" height="40" fill="#4b5563"/>
+</svg>
