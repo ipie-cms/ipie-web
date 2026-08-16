@@ -1,6 +1,6 @@
 # ipie-web — Architecture Plan
 
-The frontend counterpart to `IpieMicroservicesCurrent/ARCHITECTURE_PLAN.md`, which covers the
+The frontend counterpart to `IpieMicroservicesCurrent/ipie-platform-mca/ARCHITECTURE_WORKING_PLAN.md`, which covers the
 backend estate. This document describes ipie-web completely: what it is built from, how it is put
 together, how it authenticates, how it is configured and deployed, and what is known to be wrong
 with it today.
