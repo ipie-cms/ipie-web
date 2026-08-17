@@ -1,3 +1,4 @@
+import { getRuntimeConfig } from '@/lib/runtimeConfig'
 import { useState, type FormEvent } from 'react'
 import { useNavigate } from 'react-router-dom'
 
@@ -11,10 +12,8 @@ import { setCredentials } from '@/features/auth/authSlice'
 import { useLoginMutation } from '@/api/keycloakApi'
 import { createPkcePair } from '@/lib/pkce'
 
-const keycloakBaseUrl = import.meta.env.VITE_KEYCLOAK_BASE_URL
-const keycloakRealm = import.meta.env.VITE_KEYCLOAK_REALM
-const keycloakClientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID
-const ssoClientId = import.meta.env.VITE_KEYCLOAK_SSO_CLIENT_ID
+const { keycloakBaseUrl, keycloakRealm, keycloakClientId, keycloakSsoClientId: ssoClientId } =
+  getRuntimeConfig()
 
 // One button per wired-up identityProviders[] alias in deploy/keycloak/realm-export.json.
 const STAKEHOLDER_SSO_OPTIONS: { alias: string; label: string }[] = [

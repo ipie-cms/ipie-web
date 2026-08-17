@@ -2,14 +2,14 @@ import axios, { type AxiosError, type AxiosInstance, type InternalAxiosRequestCo
 
 import { clearStoredAuth, loadStoredAuth, saveStoredAuth, type StoredAuth } from '@/lib/authStorage'
 import { loadStoredLocale } from '@/lib/localeStorage'
+import { getRuntimeConfig } from '@/lib/runtimeConfig'
 
-const keycloakBaseUrl = import.meta.env.VITE_KEYCLOAK_BASE_URL
-const keycloakRealm = import.meta.env.VITE_KEYCLOAK_REALM
+const { keycloakBaseUrl, keycloakRealm, keycloakClientId: confidentialClientId,
+        keycloakClientSecret: confidentialClientSecret, iamServiceBaseUrl,
+        userServiceBaseUrl, communicationServiceBaseUrl } = getRuntimeConfig()
 // The confidential (ROPC) client - refreshing a token issued to this client must also present its
-// secret; refreshing a token issued to the public SSO client (VITE_KEYCLOAK_SSO_CLIENT_ID, see
+// secret; refreshing a token issued to the public SSO client (keycloakSsoClientId, see
 // StoredAuth.clientId) must not. See refreshAccessToken.
-const confidentialClientId = import.meta.env.VITE_KEYCLOAK_CLIENT_ID
-const confidentialClientSecret = import.meta.env.VITE_KEYCLOAK_CLIENT_SECRET
 
 interface RefreshTokenResponse {
   access_token: string
@@ -171,20 +171,20 @@ function createAuthedClient(baseURL: string) {
 // pointed at :8091 - a port nothing has listened on since the services settled on 8092/8093/8094.
 // Only sessionApi used it, so session status/extend/logout failed outright while every other slice
 // worked. Removed rather than repointed: it would have duplicated this client exactly.
-export const userServiceClient = createAuthedClient(import.meta.env.VITE_USER_SERVICE_BASE_URL)
+export const userServiceClient = createAuthedClient(userServiceBaseUrl)
 
 // ipie-iam-service - GET /api/v1/users/me/roles for the dashboard's role-based content.
-export const iamServiceClient = createAuthedClient(import.meta.env.VITE_IAM_SERVICE_BASE_URL)
+export const iamServiceClient = createAuthedClient(iamServiceBaseUrl)
 
 // ipie-communication-service - GET /api/v1/notifications (NOTIFICATIONS_VIEW, SUPER_ADMIN only).
-export const communicationServiceClient = createAuthedClient(import.meta.env.VITE_COMMUNICATION_SERVICE_BASE_URL)
+export const communicationServiceClient = createAuthedClient(communicationServiceBaseUrl)
 
 // Talks directly to Keycloak's token endpoint (resource owner password grant) - no auth
 // header, since obtaining the token is the point of the request. Deliberately built via plain
 // axios.create, not createAuthedClient - a login/token attempt must never trigger the
 // refresh-and-retry interceptor above.
 export const keycloakClient = axios.create({
-  baseURL: import.meta.env.VITE_KEYCLOAK_BASE_URL,
+  baseURL: keycloakBaseUrl,
 })
 
 // ipie-iam-service, unauthenticated. Setting a first password is the one credential operation
@@ -194,5 +194,5 @@ export const keycloakClient = axios.create({
 // 422 for an expired link would be retried as though it were an auth failure. Same reasoning as
 // keycloakClient above. The one-time token in the request body is the authorisation.
 export const publicIamServiceClient = axios.create({
-  baseURL: import.meta.env.VITE_IAM_SERVICE_BASE_URL,
+  baseURL: iamServiceBaseUrl,
 })

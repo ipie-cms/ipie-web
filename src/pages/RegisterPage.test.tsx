@@ -190,7 +190,7 @@ describe('RegisterPage', () => {
     const user = userEvent.setup()
     await user.click(screen.getByText('Entity'))
 
-    await user.click(screen.getByText('Select a professional role'))
+    await user.click(screen.getByText('Select one or more professional roles'))
 
     expect(screen.getByText('Admin')).toBeInTheDocument()
     expect(screen.queryByText('Insolvency Professional')).not.toBeInTheDocument()
@@ -202,19 +202,37 @@ describe('RegisterPage', () => {
     ])
   })
 
-  it('only keeps one Professional Role selected at a time', async () => {
+  it('keeps every Professional Role selected, and a credential block for each', async () => {
+    // The previous version of this test asserted the opposite - that a second choice replaced the
+    // first. That was the V23 single-role collapse, which the FRS contradicts ("can select multiple
+    // roles") and which IBBI ruled out explicitly: one account covers every role an Insolvency
+    // Professional performs.
     renderRegisterPage()
     const user = userEvent.setup()
 
-    await user.click(screen.getByText('Select a professional role'))
-    await user.click(screen.getByText('Insolvency Professional'))
-
-    expect(screen.getAllByText('Insolvency Professional')).toHaveLength(1)
-
+    await user.click(screen.getByText('Select one or more professional roles'))
     await user.click(screen.getByText('Insolvency Professional'))
     await user.click(screen.getByText('Financial Creditor'))
 
-    expect(screen.queryByText('Insolvency Professional')).not.toBeInTheDocument()
-    expect(screen.getAllByText('Financial Creditor')).toHaveLength(1)
+    // Both remain chosen: chip, list entry, and the heading of that role's credential block.
+    expect(screen.getAllByText('Insolvency Professional').length).toBeGreaterThan(1)
+    expect(screen.getAllByText('Financial Creditor').length).toBeGreaterThan(1)
+
+    // One identification pair per role, because the credential belongs to the role and not to the
+    // person - an IBBI number proves one and cannot prove the other.
+    expect(screen.getAllByText('Professional Identification Type')).toHaveLength(2)
+    expect(screen.getAllByText('Professional Identification Value')).toHaveLength(2)
+  })
+
+  it('drops a role from the selection when its chip is dismissed', async () => {
+    renderRegisterPage()
+    const user = userEvent.setup()
+
+    await user.click(screen.getByText('Select one or more professional roles'))
+    await user.click(screen.getByText('Insolvency Professional'))
+    await user.click(screen.getByText('Financial Creditor'))
+    await user.click(screen.getByText('Insolvency Professional', { selector: 'button' }))
+
+    expect(screen.getAllByText('Professional Identification Type')).toHaveLength(1)
   })
 })

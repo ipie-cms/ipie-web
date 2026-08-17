@@ -1,3 +1,4 @@
+import { getRuntimeConfig } from '@/lib/runtimeConfig'
 import { useEffect, useRef, useState } from 'react'
 import { useNavigate, useSearchParams } from 'react-router-dom'
 
@@ -8,7 +9,7 @@ import { useExchangeCodeForTokenMutation } from '@/api/keycloakApi'
 import { consumeStoredVerifier } from '@/lib/pkce'
 import { decodeJwtPayload } from '@/lib/decodeJwt'
 
-const ssoClientId = import.meta.env.VITE_KEYCLOAK_SSO_CLIENT_ID
+const { keycloakSsoClientId: ssoClientId } = getRuntimeConfig()
 
 /**
  * Lands here after LoginPage's redirectToStakeholderLogin round trip completes - exchanges the

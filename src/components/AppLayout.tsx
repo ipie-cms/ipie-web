@@ -25,9 +25,14 @@ const NAV_ITEMS: NavItem[] = [
   // instead sees any user's linked accounts cascaded under Users below.
   { to: '/linked-accounts', label: 'Linked accounts', hiddenForPermission: 'SUPER_ADMIN' },
   { to: '/users', label: 'Users', requiredPermission: 'USER_READ' },
-  // RBAC_DEFINE, not ROLES_MANAGE: this page defines what roles and permissions exist, which is
-  // SUPER_ADMIN's. An admin holding ROLES_MANAGE assigns existing roles from the Users page.
-  { to: '/roles', label: 'Roles & Permissions', requiredPermission: 'RBAC_DEFINE' },
+  // Two entries, permissions first, because they are two acts in a fixed order: a role can only be
+  // composed from permissions that already exist. One combined entry left that ordering to be
+  // inferred from the page layout.
+  //
+  // RBAC_DEFINE, not ROLES_MANAGE: these decide what capabilities exist, which is SUPER_ADMIN's. An
+  // admin holding ROLES_MANAGE assigns existing roles to people, from the Users page.
+  { to: '/permissions', label: 'Permissions', requiredPermission: 'RBAC_DEFINE' },
+  { to: '/roles', label: 'Roles', requiredPermission: 'RBAC_DEFINE' },
   { to: '/notifications', label: 'Notification', requiredPermission: 'NOTIFICATIONS_VIEW' },
 ]
 

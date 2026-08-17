@@ -57,6 +57,22 @@ export interface EntityDraftDetails {
   district?: string | null
 }
 
+/**
+ * One professional role claimed, with the credential proving it.
+ *
+ * The FRS asks for an identification type and value *per role selected* - an IP carries an IBBI
+ * registration number while the same person acting as a legal representative carries a bar
+ * registration number - so these travel together rather than as parallel arrays that could be sent
+ * at different lengths.
+ */
+export interface ProfessionalRoleEntry {
+  roleId: string
+  identificationTypeId: string
+  identificationValue: string
+  /** Advocate/CA/CS - only meaningful on the LEGAL_REPRESENTATIVE role; the server refuses it elsewhere. */
+  legalRepresentativeTypeId?: string | null
+}
+
 /** Shared by both draft-save and final-submit - every rich field optional at this layer (backend mirrors the same looseness). */
 export interface RegistrationWizardFields {
   category?: AccountCategory | null
@@ -68,10 +84,8 @@ export interface RegistrationWizardFields {
   pin?: string | null
   identityProofTypeId?: string | null
   identityProofNumber?: string | null
-  professionalRoleId?: string | null
-  professionalIdentificationTypeId?: string | null
-  professionalIdentificationValue?: string | null
-  legalRepresentativeTypeId?: string | null
+  /** Every role claimed. A person may hold several (FRS 1.1.1 item 6). */
+  professionalRoles?: ProfessionalRoleEntry[] | null
   /** Set when an already-registered Entity was picked from search - takes precedence over `entity`. */
   organisationId?: string | null
   /** Set when registering a brand-new Entity. */
@@ -115,10 +129,7 @@ export interface CurrentUserResponse {
   identityProofTypeId: string | null
   /** Last four digits only - the server does not store the rest (Aadhaar Act s.29). */
   identityProofNumberLast4: string | null
-  professionalRoleId: string | null
-  professionalIdentificationTypeId: string | null
-  professionalIdentificationValue: string | null
-  legalRepresentativeTypeId: string | null
+  professionalRoles: ProfessionalRoleEntry[]
   emailVerified: boolean
 }
 
