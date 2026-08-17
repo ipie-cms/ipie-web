@@ -48,8 +48,8 @@ export const keycloakApi = createApi({
         }
       },
     }),
-    // The other half of the stakeholder-SSO redirect round trip (see LoginPage's
-    // redirectToStakeholderLogin) - a public client (no secret), PKCE code_verifier proves
+    // The other half of the pillar-SSO redirect round trip (see LoginPage's
+    // redirectToPillarLogin) - a public client (no secret), PKCE code_verifier proves
     // possession of the same browser session that started the redirect.
     exchangeCodeForToken: builder.mutation<TokenResponse, ExchangeCodeRequest>({
       query: ({ code, codeVerifier, redirectUri }) => {

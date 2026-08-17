@@ -27,11 +27,11 @@ const STAKEHOLDER_SSO_OPTIONS: { alias: string; label: string }[] = [
 /**
  * Full-page redirect (not an axios call, unlike the ROPC form below) into the ipie realm's
  * Authorization Code flow with `kc_idp_hint=<alias>` - Keycloak's own Identity Brokering then
- * redirects on to that stakeholder body's IdP, validates the user there, and (via the custom
+ * redirects on to that pillar's IdP, validates the user there, and (via the custom
  * first-broker-login Authenticator, module ipie-keycloak-spi) resolves back to this same existing
  * ipie account if one is linked. See SsoCallbackPage for the other half of this round trip.
  */
-async function redirectToStakeholderLogin(stakeholderIdpAlias: string) {
+async function redirectToPillarLogin(pillarIdpAlias: string) {
   const { challenge } = await createPkcePair()
   const redirectUri = `${window.location.origin}/sso/callback`
   const params = new URLSearchParams({
@@ -41,15 +41,15 @@ async function redirectToStakeholderLogin(stakeholderIdpAlias: string) {
     redirect_uri: redirectUri,
     code_challenge: challenge,
     code_challenge_method: 'S256',
-    kc_idp_hint: stakeholderIdpAlias,
+    kc_idp_hint: pillarIdpAlias,
   })
   window.location.href = `${keycloakBaseUrl}/realms/${keycloakRealm}/protocol/openid-connect/auth?${params}`
 }
 
-// Keeps tsc's noUnusedLocals quiet while the stakeholder SSO buttons are commented out of the
+// Keeps tsc's noUnusedLocals quiet while the pillar SSO buttons are commented out of the
 // form below. Delete these two lines when you uncomment that section.
 void STAKEHOLDER_SSO_OPTIONS
-void redirectToStakeholderLogin
+void redirectToPillarLogin
 
 export function LoginPage() {
   const [username, setUsername] = useState('')
@@ -118,7 +118,7 @@ export function LoginPage() {
               {isLoading ? 'Signing in…' : 'Sign in'}
             </Button>
           </form>
-          {/* Stakeholder SSO buttons ("Login with IBBI"/NCLT/NCLAT/MCA/NeSL) - temporarily
+          {/* Pillar SSO buttons ("Login with IBBI"/NCLT/NCLAT/MCA/NeSL) - temporarily
               hidden, uncomment to restore.
           <div className="mt-4 flex flex-col gap-2">
             {STAKEHOLDER_SSO_OPTIONS.map(({ alias, label }) => (
@@ -127,7 +127,7 @@ export function LoginPage() {
                 type="button"
                 variant="outline"
                 className="w-full"
-                onClick={() => redirectToStakeholderLogin(alias)}
+                onClick={() => redirectToPillarLogin(alias)}
               >
                 {label}
               </Button>

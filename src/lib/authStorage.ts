@@ -7,7 +7,7 @@ export interface StoredAuth {
   refreshToken: string
   username: string
   // Which Keycloak client issued this token pair (VITE_KEYCLOAK_CLIENT_ID for ROPC,
-  // VITE_KEYCLOAK_SSO_CLIENT_ID for the stakeholder-SSO/PKCE path) - a silent token refresh must
+  // VITE_KEYCLOAK_SSO_CLIENT_ID for the pillar-SSO/PKCE path) - a silent token refresh must
   // present the same client the tokens were issued to, so this has to travel with them.
   clientId: string
 }

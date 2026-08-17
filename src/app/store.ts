@@ -9,7 +9,7 @@ import { sessionApi } from '@/api/sessionApi'
 import { registrationApi } from '@/api/registrationApi'
 import { credentialApi } from '@/api/credentialApi'
 import { rolesApi } from '@/api/rolesApi'
-import { stakeholderLinksApi } from '@/api/stakeholderLinksApi'
+import { pillarLinksApi } from '@/api/pillarLinksApi'
 import { notificationsApi } from '@/api/notificationsApi'
 import { organisationsApi } from '@/api/organisationsApi'
 import { registrationLookupsApi } from '@/api/registrationLookupsApi'
@@ -27,7 +27,7 @@ export const store = configureStore({
     [registrationApi.reducerPath]: registrationApi.reducer,
     [credentialApi.reducerPath]: credentialApi.reducer,
     [rolesApi.reducerPath]: rolesApi.reducer,
-    [stakeholderLinksApi.reducerPath]: stakeholderLinksApi.reducer,
+    [pillarLinksApi.reducerPath]: pillarLinksApi.reducer,
     [notificationsApi.reducerPath]: notificationsApi.reducer,
     [organisationsApi.reducerPath]: organisationsApi.reducer,
     [registrationLookupsApi.reducerPath]: registrationLookupsApi.reducer,
@@ -40,7 +40,7 @@ export const store = configureStore({
       registrationApi.middleware,
       credentialApi.middleware,
       rolesApi.middleware,
-      stakeholderLinksApi.middleware,
+      pillarLinksApi.middleware,
       notificationsApi.middleware,
       organisationsApi.middleware,
       registrationLookupsApi.middleware,

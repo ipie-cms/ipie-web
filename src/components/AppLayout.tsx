@@ -21,7 +21,7 @@ interface NavItem {
 const NAV_ITEMS: NavItem[] = [
   { to: '/dashboard', label: 'Dashboard' },
   // Self-service "link your own IBBI/NCLT/etc. account" - not applicable to SUPER_ADMIN, a
-  // platform operator rather than a stakeholder linking their own external identity. SUPER_ADMIN
+  // platform operator rather than a pillar linking their own external identity. SUPER_ADMIN
   // instead sees any user's linked accounts cascaded under Users below.
   { to: '/linked-accounts', label: 'Linked accounts', hiddenForPermission: 'SUPER_ADMIN' },
   { to: '/users', label: 'Users', requiredPermission: 'USER_READ' },

@@ -12,7 +12,7 @@ import { decodeJwtPayload } from '@/lib/decodeJwt'
 const { keycloakSsoClientId: ssoClientId } = getRuntimeConfig()
 
 /**
- * Lands here after LoginPage's redirectToStakeholderLogin round trip completes - exchanges the
+ * Lands here after LoginPage's redirectToPillarLogin round trip completes - exchanges the
  * authorization code (+ the PKCE verifier stashed before the redirect) for tokens, exactly the
  * same public-client Authorization Code flow any OIDC client uses, then stores them via the same
  * authStorage helper the ROPC login path already uses so the rest of the app needs no changes.
@@ -62,7 +62,7 @@ export function SsoCallbackPage() {
         )
         navigate('/dashboard', { replace: true })
       } catch {
-        setError('Sign-in was rejected - this stakeholder account may not be linked to an ipie account yet.')
+        setError('Sign-in was rejected - this pillar account may not be linked to an ipie account yet.')
       }
     }
 
@@ -74,7 +74,7 @@ export function SsoCallbackPage() {
       <Card className="w-full max-w-sm">
         <CardHeader>
           <CardTitle>Signing you in…</CardTitle>
-          <CardDescription>Completing stakeholder single sign-on.</CardDescription>
+          <CardDescription>Completing pillar single sign-on.</CardDescription>
         </CardHeader>
         {error && (
           <CardContent>

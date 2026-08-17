@@ -1,5 +1,6 @@
 import { useMemo, useState, type ReactNode } from 'react'
 
+import { usePermissions } from '@/hooks/usePermissions'
 import { Button } from '@/components/ui/button'
 import {
   Dialog,
@@ -126,10 +127,19 @@ export function UserRolesPanel({ userId, keycloakUserId }: UserRolesPanelProps) 
   const [selectedRoleName, setSelectedRoleName] = useState<string>('')
   const [revoking, setRevoking] = useState<RoleResponse | null>(null)
 
+  // Mirrors iam's delegation ceiling (RoleServiceImpl.enforceDelegationCeiling): a grantor may only
+  // assign roles whose permissions they already hold. The server is the enforcement - this list just
+  // stops the UI offering a role the assign call will reject with 403, which previously included
+  // SUPER_ADMIN for anyone holding ROLES_MANAGE. Deriving it from the caller's own permissions rather
+  // than hiding SUPER_ADMIN by name keeps the two in step as the catalogue grows.
+  const myPermissions = usePermissions()
   const assignable = useMemo(() => {
     const held = new Set((heldRoles ?? []).map((role) => role.name))
-    return (allRoles ?? []).filter((role) => !held.has(role.name))
-  }, [allRoles, heldRoles])
+    const mine = new Set(myPermissions)
+    return (allRoles ?? []).filter(
+      (role) => !held.has(role.name) && role.permissionNames.every((permission) => mine.has(permission)),
+    )
+  }, [allRoles, heldRoles, myPermissions])
 
   const effectivePermissions = useMemo(
     () => [...new Set((heldRoles ?? []).flatMap((role) => role.permissionNames))].sort(),

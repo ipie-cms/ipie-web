@@ -11,6 +11,13 @@ const mockAssignRole = vi.fn()
 const mockRevokeRole = vi.fn()
 const mockAssignState = vi.fn()
 const mockRevokeState = vi.fn()
+const mockUsePermissions = vi.fn()
+
+// The panel reads the caller's own permissions to mirror iam's delegation ceiling. Mocked rather
+// than wrapped in a store, matching how this file already isolates the API hooks.
+vi.mock('@/hooks/usePermissions', () => ({
+  usePermissions: () => mockUsePermissions(),
+}))
 
 vi.mock('@/api/rolesApi', () => ({
   useGetRolesForUserQuery: () => mockUseGetRolesForUserQuery(),
@@ -56,6 +63,9 @@ describe('UserRolesPanel', () => {
     mockRevokeState.mockReturnValue(IDLE)
     mockAssignRole.mockResolvedValue({ data: undefined })
     mockRevokeRole.mockResolvedValue({ data: undefined })
+    // A caller holding everything the fixtures grant, so the ceiling filter is out of the way of
+    // every test that is not about it.
+    mockUsePermissions.mockReturnValue(['CASE_VIEW', 'DOCUMENT_VIEW', 'FILING_SUBMIT'])
   })
 
   it('shows a loading indicator while the roles are in flight', () => {
@@ -111,6 +121,16 @@ describe('UserRolesPanel', () => {
 
   it('offers only the roles the user does not already hold', () => {
     mockUseListRolesQuery.mockReturnValue({ data: [CASE_VIEWER] })
+
+    renderPanel()
+
+    expect(screen.getByRole('button', { name: /all roles assigned/i })).toBeDisabled()
+  })
+
+  it('does not offer a role granting a permission the caller does not hold', () => {
+    // The escalation the ceiling closed: ROLES_MANAGE let any holder assign any role, SUPER_ADMIN
+    // included. The server refuses it with 403; this stops the UI offering it in the first place.
+    mockUsePermissions.mockReturnValue(['CASE_VIEW', 'DOCUMENT_VIEW'])
 
     renderPanel()
 

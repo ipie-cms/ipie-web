@@ -1,4 +1,4 @@
-// PKCE (RFC 7636) helpers for the stakeholder-SSO login path ("Login with IBBI") - the only login
+// PKCE (RFC 7636) helpers for the pillar-SSO login path ("Login with IBBI") - the only login
 // flow in this app that uses the OIDC Authorization Code grant (see keycloakApi.ts's ROPC login
 // for the existing username/password path, which needs none of this). Web Crypto API only, no
 // new dependency.

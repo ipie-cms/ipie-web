@@ -234,7 +234,7 @@ function DeleteRoleDialog({ role, onClose }: { role: RoleResponse; onClose: () =
  *
  * Assigning a role to a person happens on the Users page, where the person is in view - see
  * `UserRolesPanel`. That is a different power and a different permission: assigning hands out a
- * capability that already exists (ROLES_MANAGE, held by STAKEHOLDER_ADMIN), while everything on
+ * capability that already exists (ROLES_MANAGE, held by PILLAR_ADMIN), while everything on
  * this page decides what capabilities exist at all (RBAC_DEFINE, SUPER_ADMIN only).
  *
  * Every write here is guarded by RBAC_DEFINE server-side; the nav entry that reaches this page is

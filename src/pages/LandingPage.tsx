@@ -57,7 +57,7 @@ const HERO_ORBIT_ICONS = [Scale, Building2, Landmark, Handshake, ShieldCheck, Fi
 const ABOUT_PETALS = [
   { icon: FolderKanban, label: 'Case Mgmt' },
   { icon: FileText, label: 'Claims' },
-  { icon: Handshake, label: 'Stakeholders' },
+  { icon: Handshake, label: 'Pillars' },
   { icon: Gavel, label: 'Resolution' },
   { icon: ClipboardCheck, label: 'Compliance' },
   { icon: Vote, label: 'E-Voting' },
@@ -125,7 +125,7 @@ const SERVICES = [
   },
   {
     icon: Handshake,
-    title: 'Stakeholder Management',
+    title: 'Pillar Management',
     description:
       'Facilitate collaboration across creditors, resolution professionals, regulators and other stakeholders.',
   },

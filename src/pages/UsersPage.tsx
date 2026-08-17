@@ -5,21 +5,21 @@ import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/
 import { UserRolesPanel } from '@/components/UserRolesPanel'
 import { useHasPermission } from '@/hooks/usePermissions'
 import { useSearchUsersQuery } from '@/api/usersApi'
-import { useGetStakeholderLinksForUserQuery } from '@/api/stakeholderLinksApi'
+import { useGetPillarLinksForUserQuery } from '@/api/pillarLinksApi'
 
 function UserLinkedAccounts({ userId }: { userId: string }) {
-  const { data: links, isLoading } = useGetStakeholderLinksForUserQuery(userId)
+  const { data: links, isLoading } = useGetPillarLinksForUserQuery(userId)
 
   if (isLoading) return <p className="text-muted-foreground text-xs">Loading linked accounts…</p>
   if (!links || links.length === 0) {
-    return <p className="text-muted-foreground text-xs">No linked stakeholder accounts.</p>
+    return <p className="text-muted-foreground text-xs">No linked pillar accounts.</p>
   }
 
   return (
     <ul className="flex flex-col gap-1">
       {links.map((link) => (
         <li key={link.id} className="text-xs">
-          <span className="font-medium">{link.stakeholderType}</span>
+          <span className="font-medium">{link.pillarType}</span>
           <span className="text-muted-foreground"> — {link.externalUsername}, linked {new Date(link.linkedAt).toLocaleDateString()}</span>
         </li>
       ))}

@@ -30,7 +30,7 @@ export interface RuntimeConfig {
   keycloakClientId: string
   /** See the note above: public by construction, and not a secret in any useful sense. */
   keycloakClientSecret: string
-  /** Public, PKCE-only client for the stakeholder-SSO path ("Login with IBBI"). */
+  /** Public, PKCE-only client for the pillar-SSO path ("Login with IBBI"). */
   keycloakSsoClientId: string
 }
 
