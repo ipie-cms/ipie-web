@@ -1,0 +1,20 @@
+{
+  "_comment": [
+    "Template for a deployed environment. The served copy is config.json, supplied by whatever",
+    "hosts the static files - a mounted ConfigMap, a file written into the serving layer at deploy",
+    "time - and NOT baked into the bundle. That is what lets one build be promoted from DEV to",
+    "Production unchanged.",
+    "Everything here reaches the browser and is readable by anyone. Nothing secret belongs in it.",
+    "keycloakClientSecret is a confidential client's secret used from a browser; it protects",
+    "nothing, and the login flow should move to a public client with PKCE as the SSO client",
+    "already does."
+  ],
+  "userServiceBaseUrl": "https://<env>.example.gov.in/user",
+  "iamServiceBaseUrl": "https://<env>.example.gov.in/iam",
+  "communicationServiceBaseUrl": "https://<env>.example.gov.in/communication",
+  "keycloakBaseUrl": "https://<env>-identity.example.gov.in",
+  "keycloakRealm": "ipie",
+  "keycloakClientId": "<confidential client for password login>",
+  "keycloakClientSecret": "<see the note above>",
+  "keycloakSsoClientId": "ipie-web-sso"
+}

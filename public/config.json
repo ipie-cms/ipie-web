@@ -1,0 +1,10 @@
+{
+  "userServiceBaseUrl": "http://localhost:8092",
+  "iamServiceBaseUrl": "http://localhost:8093",
+  "communicationServiceBaseUrl": "http://localhost:8094",
+  "keycloakBaseUrl": "http://localhost:8080",
+  "keycloakRealm": "ipie",
+  "keycloakClientId": "ipie-service-template",
+  "keycloakClientSecret": "ipie-service-template-secret",
+  "keycloakSsoClientId": "ipie-web-sso"
+}

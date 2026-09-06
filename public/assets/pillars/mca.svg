@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" role="img" aria-label="MCA emblem placeholder">
+  <circle cx="32" cy="32" r="30" fill="#eef2ff" stroke="#c7d2fe" stroke-width="2"/>
+  <path d="M32 14 L46 22 V32 C46 42 40 48 32 50 C24 48 18 42 18 32 V22 Z" fill="#4338ca" opacity="0.15"/>
+  <text x="32" y="37" text-anchor="middle" font-family="ui-serif, Georgia, serif" font-size="13" font-weight="700" fill="#3730a3">MCA</text>
+</svg>
