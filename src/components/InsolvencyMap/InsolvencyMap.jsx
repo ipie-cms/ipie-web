@@ -1,7 +1,6 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import Container from '../Container/Container';
 
-
 const GEO_SOURCES = [
   'https://raw.githubusercontent.com/AbhinavSwami28/india-official-geojson/main/india-states-simplified.geojson',
   'https://cdn.jsdelivr.net/gh/AbhinavSwami28/india-official-geojson@main/india-states-simplified.geojson',
@@ -10,7 +9,6 @@ const GEO_SOURCES = [
   'https://raw.githubusercontent.com/Anujarya300/bubble_maps/master/data/geography/india_map.geojson',
 ];
 
-// ✅ FIX 2: Lakshadweep jaise chhote UT jo kuch GeoJSON sources me missing hote hain — alag se merge honge
 const EXTRA_REGIONS = [
   {
     name: 'Lakshadweep',
@@ -22,26 +20,12 @@ const EXTRA_REGIONS = [
 ];
 
 const VB_W = 600, VB_H = 660;
-
-/* Figma jaisi dark blue scale (Low -> High) */
 const COLOR_SCALE = ['#DCE6F9', '#A8C3F1', '#6D9BEA', '#3F74E0', '#1E4CB5', '#0E2763'];
 
-const statesIntensity = {
-  'Andaman and Nicobar Islands': 35, 'Andhra Pradesh': 72, 'Arunachal Pradesh': 42,
-  'Assam': 80, 'Bihar': 55, 'Chandigarh': 65, 'Chhattisgarh': 70,
-  'Dadra and Nagar Haveli and Daman and Diu': 48, 'Delhi': 88, 'Goa': 65,
-  'Gujarat': 75, 'Haryana': 75, 'Himachal Pradesh': 50, 'Jharkhand': 58,
-  'Karnataka': 85, 'Kerala': 55, 'Ladakh': 45, 'Lakshadweep': 80,
-  'Madhya Pradesh': 90, 'Maharashtra': 95, 'Manipur': 45, 'Meghalaya': 50,
-  'Mizoram': 48, 'Nagaland': 45, 'Odisha': 62, 'Puducherry': 60, 'Punjab': 65,
-  'Rajasthan': 60, 'Sikkim': 45, 'Tamil Nadu': 92, 'Telangana': 78, 'Tripura': 52,
-  'Uttar Pradesh': 70, 'Uttarakhand': 60, 'West Bengal': 68,'Jammu and Kashmir':55,
-};
-
 const statesData = {
-  'Maharashtra': { cases: 1456, ips: 1567, liquidation: 2234, cirp: 10234 },
-  'Karnataka': { cases: 1123, ips: 1233, liquidation: 1789, cirp: 8234 },
-  'Tamil Nadu': { cases: 1345, ips: 1478, liquidation: 2123, cirp: 9876 },
+  'Maharashtra': { cases: 1956, ips: 1967, liquidation: 2234, cirp: 10234 },
+  'Karnataka': { cases: 1523, ips: 1733, liquidation: 1889, cirp: 18234 },
+  'Tamil Nadu': { cases: 1145, ips: 1147, liquidation: 2113, cirp: 9876 },
   'Madhya Pradesh': { cases: 1234, ips: 1356, liquidation: 1945, cirp: 8956 },
   'Delhi': { cases: 1234, ips: 1456, liquidation: 2134, cirp: 9876 },
   'Uttar Pradesh': { cases: 1023, ips: 1134, liquidation: 1645, cirp: 7567 },
@@ -49,12 +33,10 @@ const statesData = {
   'Assam': { cases: 945, ips: 1050, liquidation: 1456, cirp: 6789 },
   'Telangana': { cases: 912, ips: 1001, liquidation: 1456, cirp: 6789 },
   'West Bengal': { cases: 834, ips: 912, liquidation: 1312, cirp: 6012 },
-    'Ladakh': { cases: 834, ips: 912, liquidation: 1312, cirp: 6012 },
-    'Lakshadweep': { cases: 995, ips: 860, liquidation: 1120, cirp: 9350 },
-
+  'Ladakh': { cases: 2834, ips: 2912, liquidation: 19312, cirp: 36012 },
+  'Lakshadweep': { cases: 1995, ips: 1860, liquidation: 1120, cirp: 9350 },
 };
 
-/* ✅ CHANGE 1: Figma jaisi stats (icon + label + value + Save Products) */
 const STATS = [
   { label: 'Active Cases', value: '3456+', color: '#3B82F6', bg: '#E8F0FE' },
   { label: 'Resolved Cases', value: '2345+', color: '#F59E0B', bg: '#FDF3E0' },
@@ -70,9 +52,6 @@ const StatIcon = ({ className = '' }) => (
 
 const norm = (s = '') => s.toLowerCase().replace(/[^a-z]/g, '');
 const ALIAS = { orissa: 'odisha', uttaranchal: 'uttarakhand', telengana: 'telangana', nctofdelhi: 'delhi' };
-const NORM_INTENSITY = Object.fromEntries(Object.entries(statesIntensity).map(([k, v]) => [norm(k), v]));
-const intensityOf = (name) => NORM_INTENSITY[ALIAS[norm(name)] || norm(name)] ?? 0;
-
 const getStateName = (p = {}) =>
   p.State_Name || p.state || p.name || p.NAME_1 || p.NAME || p.st_name || 'Unknown';
 
@@ -82,7 +61,6 @@ const mercator = ([lon, lat]) => {
   return [x, Math.log(Math.tan(Math.PI / 4 + phi / 2))];
 };
 
-/* ✅ FIX 1 helpers: Dot ko sabse bade landmass ke true center par rakhne ke liye */
 const ringArea = (ring) => {
   let a = 0;
   for (let i = 0; i < ring.length; i++) {
@@ -119,13 +97,36 @@ const pointInRing = ([px, py], ring) => {
   return inside;
 };
 
-const getColor = (intensity = 0) => {
-  if (intensity >= 90) return COLOR_SCALE[5];
-  if (intensity >= 80) return COLOR_SCALE[4];
-  if (intensity >= 70) return COLOR_SCALE[3];
-  if (intensity >= 60) return COLOR_SCALE[2];
-  if (intensity >= 50) return COLOR_SCALE[1];
-  return COLOR_SCALE[0];
+// ✅ Helper to get cases for a state
+const getCasesForState = (name) => {
+  const normName = norm(name);
+  const matchedKey = Object.keys(statesData).find(
+    (k) => norm(k) === normName || ALIAS[normName] === norm(k)
+  );
+  return matchedKey ? statesData[matchedKey].cases : 0;
+};
+
+// ✅ Calculate min/max from data
+const CASE_VALUES = Object.values(statesData).map((d) => d.cases);
+const MIN_CASES = Math.min(...CASE_VALUES);
+const MAX_CASES = Math.max(...CASE_VALUES);
+
+// ✅ FIXED: Threshold-based coloring to keep map lighter
+const getColorForState = (name) => {
+  const cases = getCasesForState(name);
+  
+  if (MAX_CASES === MIN_CASES) return COLOR_SCALE[0];
+  
+  const ratio = (cases - MIN_CASES) / (MAX_CASES - MIN_CASES);
+  
+  // ✅ Keep most states in lighter colors
+  // Only top states get darker colors
+  if (ratio >= 0.95) return COLOR_SCALE[5]; // Darkest - only absolute max
+  if (ratio >= 0.85) return COLOR_SCALE[4]; // Dark - top 1-2 states
+  if (ratio >= 0.70) return COLOR_SCALE[3]; // Medium-dark
+  if (ratio >= 0.50) return COLOR_SCALE[2]; // Medium
+  if (ratio >= 0.25) return COLOR_SCALE[1]; // Light-medium
+  return COLOR_SCALE[0]; // Lightest - most states
 };
 
 const Sparkline = ({ seed = 0 }) => {
@@ -162,7 +163,6 @@ export default function IndiaStatesChoropleth() {
       }
       if (!base) return;
 
-      // ✅ FIX 2: Missing regions (Lakshadweep) ko alag GeoJSON se merge karo
       const existing = new Set((base.features || []).map((f) => norm(getStateName(f.properties || {}))));
       for (const region of EXTRA_REGIONS) {
         if (existing.has(norm(region.name))) continue;
@@ -242,8 +242,6 @@ export default function IndiaStatesChoropleth() {
         })
       );
 
-      // ✅ FIX 1: Dot HAR state me — sabse bade polygon ke area-weighted center par,
-      // point-in-polygon check ke saath (fallback: bbox center)
       let bestRing = null, bestArea = -1;
       rings.forEach((poly) => {
         const ring = poly[0];
@@ -293,13 +291,8 @@ export default function IndiaStatesChoropleth() {
     <Container>
     <section className="bg-white pb-[20px] md:py-[80px]">
       <div className="max-w-7xl mx-auto px-4">
-
-        {/* ✅ CHANGE 2: Bada light-blue rounded panel (Figma jaisa) */}
         <div className="bg-[#EDF4FC] rounded-2xl p-5 md:p-8">
-
-          {/* ===== Row 1: Title+Description (left) + Stats card (right) ===== */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12 items-center mb-8 md:mb-10">
-            {/* Left – Title & Description */}
             <div>
               <h2 className="text-xl md:text-2xl font-bold text-gray-900 mb-3">
                 Insolvency Activity Across India
@@ -309,7 +302,6 @@ export default function IndiaStatesChoropleth() {
               </p>
             </div>
 
-            {/* Right – Single white stats card with dividers */}
             <div className="bg-white rounded-xl shadow-sm grid grid-cols-1 sm:grid-cols-3 divide-y divide-gray-200 sm:divide-y-0 sm:divide-x">
               {STATS.map((s) => (
                 <div key={s.label} className="flex items-center gap-4 px-6 py-5">
@@ -333,10 +325,7 @@ export default function IndiaStatesChoropleth() {
             </div>
           </div>
 
-          {/* ===== Row 2: Map card + Table card (alag-alag cards) ===== */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 items-stretch">
-
-            {/* LEFT: Map card */}
             <div
               ref={wrapRef}
               className="relative bg-[#F7F9FC] rounded-xl shadow-sm overflow-hidden p-6 flex items-center justify-center"
@@ -354,7 +343,7 @@ export default function IndiaStatesChoropleth() {
                     <path
                       key={i}
                       d={s.d}
-                      fill={getColor(intensityOf(s.name))}
+                      fill={getColorForState(s.name)}
                       fillRule="evenodd"
                       stroke="#ffffff"
                       strokeWidth="1"
@@ -371,7 +360,6 @@ export default function IndiaStatesChoropleth() {
                 <p className="text-gray-500 text-sm">Loading map…</p>
               )}
 
-              {/* Connector line */}
               {hover && (
                 <div
                   className="absolute z-10 pointer-events-none"
@@ -386,7 +374,6 @@ export default function IndiaStatesChoropleth() {
                 />
               )}
 
-              {/* Hover Tooltip */}
               {hover && hoverData && (
                 <div
                   className="absolute z-20 pointer-events-none"
@@ -422,7 +409,6 @@ export default function IndiaStatesChoropleth() {
                 </div>
               )}
 
-              {/* Legend – bottom center */}
               <div className="absolute bottom-5 left-1/2 -translate-x-1/2 flex items-center gap-3">
                 <span className="text-xs font-bold text-gray-800">Low</span>
                 <div className="flex shadow-sm">
@@ -434,7 +420,6 @@ export default function IndiaStatesChoropleth() {
               </div>
             </div>
 
-            {/* RIGHT: Table card */}
             <div className="bg-white rounded-xl shadow-sm overflow-hidden flex flex-col">
               <div className="px-6 py-4 bg-[#DDE4EE]">
                 <h3 className="text-base font-bold text-gray-900">Top 10 States by Cases</h3>
@@ -459,7 +444,7 @@ export default function IndiaStatesChoropleth() {
                       >
                         <td className="py-3 pr-2">
                           <div className="flex items-center gap-3">
-                            <span className="w-4 h-4 rounded shrink-0" style={{ backgroundColor: getColor(intensityOf(state)) }} />
+                            <span className="w-4 h-4 rounded shrink-0" style={{ backgroundColor: getColorForState(state) }} />
                             <span className="text-gray-900">{state}</span>
                           </div>
                         </td>
