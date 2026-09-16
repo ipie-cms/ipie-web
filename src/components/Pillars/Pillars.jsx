@@ -56,7 +56,7 @@ export default function Pillars() {
 
   return (
     <Container>
-    <section className="bg-white py-[20px] md:py-[80px]">
+    <section className="bg-white pt-[20px] md:pt-[80px]">
       <div className="max-w-[1600px] mx-auto px-4">
 
         {/* ===== Title with lines + end dots (Figma jaisa) ===== */}
