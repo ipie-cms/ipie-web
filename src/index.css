@@ -1,7 +1,65 @@
 @import "tailwindcss";
 
-
-
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ================================ */
+/* Recharts click focus outline fix */
+/* ================================ */
+.recharts-wrapper,
+.recharts-wrapper *:focus,
+.recharts-surface,
+.recharts-surface *,
+svg:focus {
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+/* SAVE DRAFT hover – orange gradient */
+.btn-save-draft:hover {
+  background: linear-gradient(180deg, #d84a2b 0%, #e8803e 100%);
+  border-color: transparent;
+  color: #ffffff;
+}
+
+/* ================================ */
+/* PREVIEW hover – dark→light blue gradient flow (Figma jaisa) */
+/* ================================ */
+.btn-preview {
+  position: relative;
+  overflow: hidden;
+  background-color: #0d63f0; /* solid blue (default) */
+}
+
+/* Gradient overlay – default me invisible */
+.btn-preview::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    95deg,
+    rgba(109, 177, 255, 0) 30%,
+    rgba(109, 177, 255, 0.95) 92%
+  );
+  background-size: 170% 100%;
+  background-position: 0% 0;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+/* Hover pe gradient fade-in + halka flow */
+.btn-preview:hover::after {
+  opacity: 1;
+  animation: preview-flow 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes preview-flow {
+  from {
+    background-position: 0% 0;
+  }
+  to {
+    background-position: 70% 0;
+  }
+}
