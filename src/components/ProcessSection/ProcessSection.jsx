@@ -90,7 +90,7 @@ export default function ProcessSection() {
   return (
     <Container>
     <section
-      className="bg-[#F7F9FB] py-12 md:py-16 overflow-hidden"
+      className=" pb-12 md:pb-16 overflow-hidden"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
     >

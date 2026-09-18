@@ -33,7 +33,7 @@ const statesData = {
   'Assam': { cases: 945, ips: 1050, liquidation: 1456, cirp: 6789 },
   'Telangana': { cases: 912, ips: 1001, liquidation: 1456, cirp: 6789 },
   'West Bengal': { cases: 834, ips: 912, liquidation: 1312, cirp: 6012 },
-  'Ladakh': { cases: 2834, ips: 2912, liquidation: 19312, cirp: 36012 },
+  'Ladakh': { cases: 1834, ips: 1912, liquidation: 312, cirp: 1012 },
   'Lakshadweep': { cases: 1995, ips: 1860, liquidation: 1120, cirp: 9350 },
 };
 

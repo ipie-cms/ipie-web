@@ -95,7 +95,7 @@ const SERVICES = [
 export default function OurServices() {
   return (
     <Container>
-      <section className="bg-[#E9F1FC] py-16 md:py-20">
+      <section className=" py-16 md:py-20">
         <div className="max-w-7xl mx-auto px-4">
           {/* Header */}
           <h2 className="text-3xl md:text-4xl font-bold text-center text-slate-900 mb-3">Our Services</h2>
